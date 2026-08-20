@@ -1,1 +1,57 @@
 
+نام: ویندوز ابر RDP
+
+بر روی:
+  گردش کار_ارسال:
+
+شغل ها:
+  بنا کردن:
+    اجرا می شد: ویندوز-جدیدترین
+    طیم اوت دقیه: 360
+
+    مراحل:
+      - نام: 1. Remote Desktop & Firewall ra faAl KNID
+        آجرا کنید: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' - nam "fDenyTSConnections" - ارزش 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty - مسیر 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' - nam "UserAuthentication" - ارزش 0
+
+      - نام: 2. ایجاد حسب مدیرت
+        اجرا کنید: |
+          $Password = ConvertTo-SecureString "Iss@2026" -AsPlainText -Force
+          New-LocalUser - nam "ISSAdmin" - ramz abour $ klhamh abour - ramz abeverExpires - ErrorAction SilentlyContinue
+          Add-LocalGroupMember - GERGroh "Adminators" - AZO "ISSAdmin" -ErrorAction Bi sar ow Seda Adamah Dehid
+          karbar Khalas runneradmin Iss@2026
+
+      - نام: 3. VPN Tailscale ra nesb و Sessel KNID
+        env:
+          TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
+        اجرا کنید: |
+          # Tailscale ra bi Seda danlod و Nesb knyd
+          Invoke-WebRequest "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile" C:\tailscale.msi
+          Start-Process msiexec -ArgumentList "/i C:\tailscale.msi/quiet/norestart" -sebar knyd
+          
+          #اصول به شبکه ترازو
+          شروعه-خواب - ثانیه 5
+          & "C:\Program Files\Tailscale\tailscale.exe" up --authkey="$Env:TAILSCALE_AUTHKEY" --hostname="github-rdp-server"
+          
+          شروعه-خواب - ثانیه 8
+          
+          # IP Tailscale ra driaft KNID
+          $ts_ip = & "C:\Program Files\Tailscale\tailscale.exe" ip -4
+          
+          Write-Host ""
+          Write-Host "==================================================" -ForegroundColor Green
+          Write-Host ">>> RDP SERVER amadh ast! <<<" -ForegroundColor Cyan
+          میزبان نوشتن "IP Tailscale: $ts_ip" - ForegroundColor Yellow
+          Write-Host "Nam Karbri: ISSAdmin" - ForegroundColor Zerd
+          Write-Host "Password: Iss@2026" - ForegroundColor Zerd
+          Write-Host " >> mstsc ra baz knyd and bh: $ts_ip -ForegroundColor Magenta Metshel Shoyd
+          Write-Host "==================================================" -ForegroundColor Green
+
+      - نام: 4. سرور را زده نگاه درد (6 ساعت)
+        آجرا کنید: |
+          BARAI ($i = 1 DAY $i -le 360 HEAL $i++) {
+            شروه-خواب - ثانیه آن ه
+            Write-Host "[$i/360] سرور در حال عذرا..."
+          }
